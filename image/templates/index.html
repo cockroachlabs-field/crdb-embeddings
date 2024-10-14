@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+<head>
+  <title>Image Search</title>
+</head>
+<body>
+
+<h1>Image Search</h1>
+
+<table style="margin-left: auto; margin-right: auto; padding-top: 10%;">
+<tr style="vertical-align: center;">
+{% for hit in hits %}
+<td><img src="/thumb/{{ hit.uri }}"/></td>
+{% endfor %}
+</tr>
+<tr style="vertical-align: center;">
+{% for hit in hits %}
+<td style="text-align: center;">score: {{ hit.score }}</td>
+{% endfor %}
+</tr>
+</table>
+
+<form method="POST" action="/" enctype="multipart/form-data">
+  <p><input type="file" name="file"></p>
+  <p><input type="submit" value="Submit"></p>
+</form>
+
+</body>
+</html>
+

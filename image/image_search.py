@@ -79,6 +79,9 @@ print("shared secret: {}".format(secret))
 blob_store_keep_n_rows = os.environ.get("BLOB_STORE_KEEP_N_ROWS", "3")
 print("blob_store_keep_n_rows: {}".format(blob_store_keep_n_rows))
 
+max_hits = os.environ.get("MAX_RESULTS", "4")
+print("max_hits: {}".format(max_hits))
+
 log_level = os.environ.get("LOG_LEVEL", "WARN").upper()
 logging.basicConfig(
   level=log_level
@@ -534,11 +537,10 @@ def build_model(s):
   return Response("OK", status=200, mimetype="text/plain")
 
 # Returns: list of {"uri": uri, "score": sim }
-def search(conn, uri, limit):
+def search(conn, uri, img, limit):
   logging.info("Query URI: '{}'".format(uri))
   rv = []
   t0 = time.time()
-  img = get_image_from_url(uri)
   embed = get_image_features(img)
   et = time.time() - t0
   logging.info("  get_image_features(): {} ms".format(et * 1000))
@@ -558,17 +560,17 @@ def search(conn, uri, limit):
   return rv
 
 # Pass the image URL, base64 encoded
-@app.route("/search/<int:nItems>/<urlBase64>")
-def queryImageUrl(nItems, urlBase64):
-  url = decode(urlBase64)
+@app.route("/search/<int:n_items>/<url_b64>")
+def query_image_url(n_items, url_b64):
+  url = decode(url_b64)
+  img = get_image_from_url(url)
   with engine.connect() as conn:
-    #conn.execute(text("SET TRANSACTION AS OF SYSTEM TIME '-10s';"))
-    rv = retry(search, (conn, url, nItems))
+    rv = retry(search, (conn, url, img, n_items))
   return Response(json.dumps(rv), status=200, mimetype="application/json")
 
-@app.route("/index/<urlBase64>")
-def do_index(urlBase64):
-  url = decode(urlBase64)
+@app.route("/index/<url_b64>")
+def do_index(url_b64):
+  url = decode(url_b64)
   with engine.connect() as conn:
     rv = retry(index_image, (conn, url))
   return rv
@@ -650,19 +652,30 @@ def too_large(e):
 @app.route('/')
 def index():
  files = os.listdir(app.config["UPLOAD_PATH"])
- return render_template("index.html", files=files)
+ return render_template("index.html", hits=files)
+
+def b64_encode(s):
+  return base64.b64encode(s.encode("utf-8")).decode("utf-8")
 
 # TODO: put the file name/URI and content into a queue for later indexing
 @app.route('/', methods=["POST"])
 def upload_files():
+  rv = []
   uploaded_file = request.files["file"]
   filename = uploaded_file.filename
+  if filename == '':
+    return render_template("index.html", hits=rv)
   content = uploaded_file.read()
+  img = Image.open(io.BytesIO(content))
   uploaded_file.seek(0)
   logging.info("{}: {} bytes".format(filename, str(len(content))))
-  if filename != '':
-    uploaded_file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
-  return '', 204
+  with engine.connect() as conn:
+    rv = retry(search, (conn, "file:///{}".format(filename), img, max_hits))
+    for hit in rv:
+      hit["uri"] = b64_encode(hit["uri"])
+      hit["score"] = "{:.3f}".format(float(hit["score"]))
+    #uploaded_file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
+  return render_template("index.html", hits=rv)
 
 # __main__
 port = int(os.getenv("FLASK_PORT", 18080))
