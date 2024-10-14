@@ -9,7 +9,7 @@ from sqlalchemy import create_engine, text, event, insert, Table, MetaData
 import warnings
 from sklearn.cluster import KMeans
 import joblib
-from flask import Flask, request, Response, send_file
+from flask import Flask, render_template, redirect, url_for, abort, request, Response, send_file
 import json
 import base64
 import uuid
@@ -18,7 +18,6 @@ import pickle
 import requests
 from pgvector.psycopg2 import register_vector
 import resource, platform
-from functools import lru_cache
 
 # Image search
 from PIL import Image
@@ -264,23 +263,30 @@ def retry(f, args):
 def get_cluster_id(rw, embed):
   return int(kmeans_model[rw].predict([embed])[0])
 
-# Returns a tuple of (embeddings, thumbnail_image)
-@lru_cache(maxsize=1024)
-def getImageFeatures(imageUrl):
-  embed = None
-  thumb = None
-  with Image.open(requests.get(imageUrl, stream=True).raw) as im:
-    thumb = im.copy()
-    thumb.thumbnail(THUMBNAIL_DIM)
-    embed = list(fe_model.embed([im]))
-  return (embed[0], thumb)
+def get_image_from_url(url):
+  rv = None
+  with Image.open(requests.get(url, stream=True).raw) as img:
+    rv = img.copy()
+  return rv
+
+# Given an Image instance, return a thumbnail version of that Image
+def gen_thumbnail(img):
+  thumb = img.copy()
+  thumb.thumbnail(THUMBNAIL_DIM)
+  return thumb
+
+def get_image_features(img):
+  embed = list(fe_model.embed([img]))
+  return embed[0]
 
 def index_image(conn, uri):
   t0 = time.time()
   embed = None
   thumb = None
   try:
-    (embed, thumb) = getImageFeatures(uri)
+    img = get_image_from_url(uri)
+    embed = get_image_features(img)
+    thumb = gen_thumbnail(img)
   except Exception as e:
     logging.warning(e)
     return Response(str(e), status=500, mimetype="text/plain")
@@ -532,9 +538,10 @@ def search(conn, uri, limit):
   logging.info("Query URI: '{}'".format(uri))
   rv = []
   t0 = time.time()
-  (embed, thumb) = getImageFeatures(uri)
+  img = get_image_from_url(uri)
+  embed = get_image_features(img)
   et = time.time() - t0
-  logging.info("  getImageFeatures(): {} ms".format(et * 1000))
+  logging.info("  get_image_features(): {} ms".format(et * 1000))
   t0 = time.time()
   cluster_id = get_cluster_id("read", embed) # This works fine with the ndarray type
   et = time.time() - t0
@@ -632,7 +639,34 @@ if not skip_kmeans:
 else:
   logging.info("Skipping loading K-Means model")
 
+# File uploads (https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask)
+app.config["MAX_CONTENT_LENGTH"] = 5 * (1 << 20)
+app.config["UPLOAD_PATH"] = "/tmp/uploads"
+
+@app.errorhandler(413)
+def too_large(e):
+  return "File is too large", 413
+
+@app.route('/')
+def index():
+ files = os.listdir(app.config["UPLOAD_PATH"])
+ return render_template("index.html", files=files)
+
+# TODO: put the file name/URI and content into a queue for later indexing
+@app.route('/', methods=["POST"])
+def upload_files():
+  uploaded_file = request.files["file"]
+  filename = uploaded_file.filename
+  content = uploaded_file.read()
+  uploaded_file.seek(0)
+  logging.info("{}: {} bytes".format(filename, str(len(content))))
+  if filename != '':
+    uploaded_file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
+  return '', 204
+
+# __main__
 port = int(os.getenv("FLASK_PORT", 18080))
+os.makedirs(app.config["UPLOAD_PATH"], mode=0o755, exist_ok=True)
 from waitress import serve
 serve(app, host="0.0.0.0", port=port, threads=n_threads)
 
