@@ -1,27 +1,53 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Image Search</title>
+  <style>
+    /* Apply margin to the entire body */
+    body {
+        margin: 50px; /* Adjust the value as needed for more or less margin */
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0; /* Light background for contrast */
+    }
+    /* Optional: Styling the content container */
+    .container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add some shadow for effect */
+    }
+    h1 {
+        color: #333;
+    }
+    p {
+        color: #666;
+    }
+  </style>
 </head>
 <body>
-
+<div class="container">
 <h1>Find Similar Images</h1>
-
 <form method="POST" action="/" enctype="multipart/form-data">
   <p><input type="file" name="file"></p>
   <p><input type="submit" value="Run Search"></p>
 </form>
 
-<table style="margin-left: auto; margin-right: auto; padding-top: 10%;">
+<table style="margin-left: auto; margin-right: auto;">
 {% if search_file %}
 <tr style="vertical-align: center;">
  <td align="center" colspan="{{ hits|length }}">
-  <b>Search file:</b><br><img src="/thumb_fs/{{ search_file }}"/>
+  <b>Search Image</b><br><img src="/thumb_fs/{{ search_file }}"/>
  </td>
 </tr>
 
 <tr>
- <td align="left" colspan="{{ hits|length }}"><b>Results:</b></td>
+ <td align="left" colspan="{{ hits|length }}"><b>Results</b></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
 </tr>
 {% endif %}
 
@@ -37,7 +63,8 @@
 {% endfor %}
 </tr>
 </table>
-
+<br>&nbsp;
+</div>
 </body>
 </html>
 
