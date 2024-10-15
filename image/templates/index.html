@@ -10,7 +10,7 @@
 <table style="margin-left: auto; margin-right: auto; padding-top: 10%;">
 <tr style="vertical-align: center;">
 {% for hit in hits %}
-<td><img src="/thumb/{{ hit.uri }}"/></td>
+<td><a href="{{ hit.uri }}"><img src="/thumb/{{ hit.uri_b64 }}"/></a></td>
 {% endfor %}
 </tr>
 <tr style="vertical-align: center;">

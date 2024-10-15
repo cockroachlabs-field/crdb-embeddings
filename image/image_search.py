@@ -191,7 +191,6 @@ cluster_assign_table = None
 
 def run_ddl(ddl):
   with engine.connect() as conn:
-    conn.execute(text("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;"))
     conn.execute(text(ddl))
     conn.commit()
 
@@ -672,7 +671,7 @@ def upload_files():
   with engine.connect() as conn:
     rv = retry(search, (conn, "file:///{}".format(filename), img, max_hits))
     for hit in rv:
-      hit["uri"] = b64_encode(hit["uri"])
+      hit["uri_b64"] = b64_encode(hit["uri"])
       hit["score"] = "{:.3f}".format(float(hit["score"]))
     #uploaded_file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
   return render_template("index.html", hits=rv)
