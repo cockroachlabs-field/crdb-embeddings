@@ -8,6 +8,16 @@
 <h1>Image Search</h1>
 
 <table style="margin-left: auto; margin-right: auto; padding-top: 10%;">
+{% if search_file %}
+<tr style="vertical-align: center;">
+ <td align="center" colspan="{{ hits|length }}">
+  <b>Search file:</b><br><img src="/thumb_fs/{{ search_file }}"/>
+ </td>
+</tr>
+<tr>
+ <td align="center" colspan="{{ hits|length }}">&nbsp;</td>
+</tr>
+{% endif %}
 <tr style="vertical-align: center;">
 {% for hit in hits %}
 <td><a href="{{ hit.uri }}"><img src="/thumb/{{ hit.uri_b64 }}"/></a></td>

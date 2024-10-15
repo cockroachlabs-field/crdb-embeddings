@@ -656,7 +656,17 @@ def index():
 def b64_encode(s):
   return base64.b64encode(s.encode("utf-8")).decode("utf-8")
 
-# TODO: put the file name/URI and content into a queue for later indexing
+def gen_thumb_path(fn):
+  return os.path.join(app.config["UPLOAD_PATH"], '.'.join(fn.split('.')[0:-1]) + ".thumb.jpg")
+
+@app.route("/thumb_fs/<filename>")
+def thumb_from_file(filename):
+  image_data = None
+  with open(gen_thumb_path(filename), mode="rb") as f:
+    image_data = f.read()
+  image_stream = io.BytesIO(image_data)
+  return send_file(image_stream, mimetype="image/jpeg")
+
 @app.route('/', methods=["POST"])
 def upload_files():
   rv = []
@@ -666,15 +676,19 @@ def upload_files():
     return render_template("index.html", hits=rv)
   content = uploaded_file.read()
   img = Image.open(io.BytesIO(content))
-  uploaded_file.seek(0)
   logging.info("{}: {} bytes".format(filename, str(len(content))))
+  img_uri = "file:///{}".format(filename)
   with engine.connect() as conn:
-    rv = retry(search, (conn, "file:///{}".format(filename), img, max_hits))
+    rv = retry(search, (conn, img_uri, img, max_hits))
     for hit in rv:
       hit["uri_b64"] = b64_encode(hit["uri"])
       hit["score"] = "{:.3f}".format(float(hit["score"]))
-    #uploaded_file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
-  return render_template("index.html", hits=rv)
+  # TODO: this could be queueing mechanism: poll these files and index them async
+  uploaded_file.seek(0)
+  uploaded_file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
+  thumb = gen_thumbnail(img)
+  thumb.save(gen_thumb_path(filename), "JPEG")
+  return render_template("index.html", hits=rv, search_file=filename)
 
 # __main__
 port = int(os.getenv("FLASK_PORT", 18080))
