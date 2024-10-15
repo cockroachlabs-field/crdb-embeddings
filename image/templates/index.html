@@ -5,7 +5,12 @@
 </head>
 <body>
 
-<h1>Image Search</h1>
+<h1>Find Similar Images</h1>
+
+<form method="POST" action="/" enctype="multipart/form-data">
+  <p><input type="file" name="file"></p>
+  <p><input type="submit" value="Run Search"></p>
+</form>
 
 <table style="margin-left: auto; margin-right: auto; padding-top: 10%;">
 {% if search_file %}
@@ -14,26 +19,24 @@
   <b>Search file:</b><br><img src="/thumb_fs/{{ search_file }}"/>
  </td>
 </tr>
+
 <tr>
- <td align="center" colspan="{{ hits|length }}">&nbsp;</td>
+ <td align="left" colspan="{{ hits|length }}"><b>Results:</b></td>
 </tr>
 {% endif %}
+
 <tr style="vertical-align: center;">
 {% for hit in hits %}
 <td><a href="{{ hit.uri }}"><img src="/thumb/{{ hit.uri_b64 }}"/></a></td>
 {% endfor %}
 </tr>
+
 <tr style="vertical-align: center;">
 {% for hit in hits %}
 <td style="text-align: center;">score: {{ hit.score }}</td>
 {% endfor %}
 </tr>
 </table>
-
-<form method="POST" action="/" enctype="multipart/form-data">
-  <p><input type="file" name="file"></p>
-  <p><input type="submit" value="Submit"></p>
-</form>
 
 </body>
 </html>
