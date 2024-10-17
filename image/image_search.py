@@ -683,7 +683,7 @@ def upload_files():
     for hit in rv:
       hit["uri_b64"] = b64_encode(hit["uri"])
       hit["score"] = "{:.3f}".format(float(hit["score"]))
-  # TODO: this could be queueing mechanism: poll these files and index them async
+  # TODO: poll these files and index them async?
   uploaded_file.seek(0)
   uploaded_file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
   thumb = gen_thumbnail(img)

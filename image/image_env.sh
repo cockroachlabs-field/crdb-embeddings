@@ -7,10 +7,10 @@ export DB_URL="postgres://test_role:123abc@127.0.0.1:26257/defaultdb"
 
 export LOG_LEVEL=INFO
 export N_THREADS=10
-export N_CLUSTERS=512
-export TRAIN_FRACTION=0.5
+export N_CLUSTERS=1024
+export TRAIN_FRACTION=0.3
 export MODEL_FILE=/tmp/image_model.pkl
-export MODEL_FILE_URL="https://storage.googleapis.com/crl-goddard-text/image_model_512_10k.pkl"
+export MODEL_FILE_URL="https://storage.googleapis.com/crl-goddard-text/image_model_1024_25k.pkl"
 export BATCH_SIZE=256
 export KMEANS_VERBOSE=2
 export KMEANS_MAX_ITER=100

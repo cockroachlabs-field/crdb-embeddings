@@ -3,3 +3,9 @@ Cakes: https://static.flickr.com/2618/4077893259_8b63b461c8.jpg
 Cats: https://static.flickr.com/2223/1891212883_821e58117e.jpg
 Cars: http://static.flickr.com/2590/3859022369_c03c4c0d6d.jpg
 Sailboats: http://static.flickr.com/2510/3928616597_1a2bf77469.jpg
+Horses: http://static.flickr.com/3223/2433818749_3a2ac9df3f.jpg
+Ducks: http://static.flickr.com/46/144332647_89790950bd.jpg
+Dogs/water: http://static.flickr.com/3585/3508565186_73a2bbba09.jpg
+Musicians: http://static.flickr.com/1236/4734972212_391c250906.jpg
+Art/potrait: https://static.flickr.com/3009/2745546792_4cea242045.jpg
+

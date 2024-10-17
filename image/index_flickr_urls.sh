@@ -7,7 +7,7 @@ then
 fi
 
 offset=$1
-limit=1000
+limit=100
 
 for url in $( gzcat ./flickr_urls.txt.gz | tail -n +$(( offset + 1 )) | head -$limit )
 do
