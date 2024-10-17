@@ -59,6 +59,7 @@
 {% else %}
 </tr>
 {% endif %}
+{% if search_file %}
 <tr style="vertical-align: center;">
 {% for hit in hits %}
 <td><a href="{{ hit.uri }}"><img src="/thumb/{{ hit.uri_b64 }}"/></a></td>
@@ -69,6 +70,7 @@
 <td style="text-align: center;">score: {{ hit.score }}</td>
 {% endfor %}
 </tr>
+{% endif %}
 </table>
 <br>&nbsp;
 </div>
