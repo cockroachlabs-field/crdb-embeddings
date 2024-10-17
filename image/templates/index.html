@@ -8,23 +8,28 @@
   <style>
     /* Apply margin to the entire body */
     body {
-        margin: 120px; /* Adjust the value as needed for more or less margin */
-        padding: 0;
-        font-family: Arial, sans-serif;
-        background-color: #f0f0f0; /* Light background for contrast */
+      margin: 120px; /* Adjust the value as needed for more or less margin */
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-image: url("/static/homepage-bg-updated.webp");
+      background-color: #ffffff; /* Light background for contrast */
+      background-size: cover;
     }
     /* Optional: Styling the content container */
     .container {
-        background-color: white;
-        padding: 20px;
-        border-radius: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add some shadow for effect */
+      background-color: white;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add some shadow for effect */
     }
-    h1 {
-        color: #333;
+    h1, b {
+      color: #5400fe;
     }
     p {
-        color: #666;
+      color: #666;
+    }
+    div + div {
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -41,7 +46,8 @@
  </td>
 {% if search_file %}
  <td align="center" colspan="{{ hits|length - 2 }}">
-  <b>Search Image</b><br><img src="/thumb_fs/{{ search_file }}"/>
+  <div><b>Search Image</b></div>
+  <div><img src="/thumb_fs/{{ search_file }}"/></div>
  </td>
 </tr>
 <tr>
