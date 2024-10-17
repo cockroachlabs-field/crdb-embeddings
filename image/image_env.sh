@@ -20,5 +20,5 @@ export MEMORY_LIMIT_MB=16384
 export SKIP_KMEANS=false
 
 # For client
-export MAX_RESULTS=5
+export MAX_RESULTS=4
 

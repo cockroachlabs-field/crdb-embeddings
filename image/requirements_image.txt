@@ -8,4 +8,4 @@ sqlalchemy-cockroachdb==2.0.1
 scikit-learn
 pgvector
 fastembed
-
+pillow-heif-0.18.0

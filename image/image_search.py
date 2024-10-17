@@ -22,6 +22,8 @@ import resource, platform
 # Image search
 from PIL import Image
 from fastembed import ImageEmbedding
+from pillow_heif import register_heif_opener
+register_heif_opener()
 
 THUMBNAIL_DIM = 192, 192
 
