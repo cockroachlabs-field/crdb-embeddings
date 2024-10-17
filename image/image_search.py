@@ -687,6 +687,7 @@ def upload_files():
   uploaded_file.seek(0)
   uploaded_file.save(os.path.join(app.config["UPLOAD_PATH"], filename))
   thumb = gen_thumbnail(img)
+  thumb = thumb.convert("RGB")
   thumb.save(gen_thumb_path(filename), "JPEG")
   return render_template("index.html", hits=rv, search_file=filename)
 
