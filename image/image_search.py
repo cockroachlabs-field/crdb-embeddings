@@ -652,8 +652,7 @@ def too_large(e):
 
 @app.route('/')
 def index():
- files = os.listdir(app.config["UPLOAD_PATH"])
- return render_template("index.html", hits=files)
+  return render_template("index.html", hits=None)
 
 def b64_encode(s):
   return base64.b64encode(s.encode("utf-8")).decode("utf-8")
