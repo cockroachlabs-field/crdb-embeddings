@@ -29,10 +29,18 @@
     div + div {
       margin-top: 10px;
     }
+    .ui-draggable, .ui-droppable {
+	    background-position: top;
+    }
   </style>
+  <link rel="stylesheet" href="/static/jquery-ui.css">
+  <script src="/static/jquery-3.7.1.js"></script>
+  <script src="/static/jquery-ui.js"></script>
 </head>
 <body>
+
 <div class="container">
+<img src="/static/CockroachDB_logo_black_letters.png">
 <h1>Find Similar Images</h1>
 <table style="margin-left: auto; margin-right: auto;">
 <tr style="vertical-align: center;">
@@ -71,8 +79,33 @@
 {% endif %}
 </table>
 <br>&nbsp;
-<a href="https://github.com/cockroachlabs-field/crdb-embeddings/tree/main/image"><i>See it on GitHub</i></a>
+<a href="#" onClick='$( function() { $( "#dialog" ).dialog({ width: $(window).width() * 0.67, position: { my: "center", at: "center", of: window } }); } );'>What's going on here?</a>
 </div>
+
+<div id="dialog" title="CockroachDB Image Search Demo" style="display: none;">
+<p>
+This demo illustrates one potential application of the new <b>pgvector</b> compatible capability
+released in the 24.2 version of <b>CockroachDB</b>.  When you click <i>Choose File</i> and then
+<i>Run Search</i>, the following sequence occurs:
+<ol>
+  <li>Your chosen image is uploaded to the app
+  <li>Your image's <i>features</i> are extracted using a large language model (<b>LLM</b>)
+  <li>A K-Means model uses the features to predict which cluster that image would map to in our index
+  <li>This result, along with image features, is incorporated into a SQL query
+  <li>The closest matches are rendered on this page ordered by their <b>cosine similarity</b> to the your image
+</ol>
+<br>
+Some additional details on the demo deployment:
+<ul>
+  <li>The index consists of approximately 50000 images from Flickr
+  <li>The app is written in Python + Flask
+  <li>The database is a <a href="https://cockroachlabs.cloud/signup"><b>CockroachDB</b> <i>Basic</i> instance</a>
+</ul>
+<br>
+Further details are available in the demo's <a href="https://github.com/cockroachlabs-field/crdb-embeddings/tree/main/image">GitHub repo</a>.
+</p>
+</div>
+
 </body>
 </html>
 
