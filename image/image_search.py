@@ -10,6 +10,7 @@ import warnings
 from sklearn.cluster import KMeans
 import joblib
 from flask import Flask, render_template, redirect, url_for, abort, request, Response, send_file
+from werkzeug.utils import secure_filename
 import json
 import base64
 import uuid
@@ -672,7 +673,7 @@ def thumb_from_file(filename):
 def upload_files():
   rv = []
   uploaded_file = request.files["file"]
-  filename = uploaded_file.filename
+  filename = secure_filename(uploaded_file.filename)
   if filename == '':
     return render_template("index.html", hits=rv)
   content = uploaded_file.read()
