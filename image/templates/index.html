@@ -79,27 +79,27 @@
 {% endif %}
 </table>
 <br>&nbsp;
-<b onClick='$( function() { $( "#dialog" ).dialog({ width: $(window).width() * 0.67, position: { my: "center", at: "center", of: window } }); } );'>What's going on here?</b>
+<b onclick='$( function() { $( "#dialog" ).dialog({ width: $(window).width() * 0.67, position: { my: "center", at: "center", of: window } }); } );'>What's going on here?</b>
 </div>
 
 <div id="dialog" title="CockroachDB Image Search Demo" style="display: none;">
 <p>
-This demo illustrates one potential application of the new <b>pgvector</b> compatible capability
+This demo illustrates one potential application of the new <b onclick="window.open('https://github.com/pgvector/pgvector')">pgvector</b> compatible capability
 released in the 24.2 version of <b>CockroachDB</b>.  When you click <i>Choose File</i> and then
 <i>Run Search</i>, the following sequence occurs:
 <ol>
   <li>Your chosen image is uploaded to the app
-  <li>Your image's <i>features</i> are extracted using a large language model (<b>LLM</b>)
-  <li>A K-Means model uses the features to predict which cluster that image would map to in our index
-  <li>This result, along with image features, is incorporated into a SQL query
-  <li>The closest matches are rendered on this page ordered by their <b>cosine similarity</b> to the your image
+  <li>Your image's <i>features</i> are extracted using a large language model (<b onclick="window.open('https://github.com/qdrant/fastembed?tab=readme-ov-file#%EF%B8%8F-image-embeddings')">LLM</b>)
+  <li>A <b onclick="window.open('https://en.wikipedia.org/wiki/K-means_clustering')"><i>k-means</i></b> model uses the features to predict which cluster that image would map to in our index
+  <li>This result, along with the image feature vectors, is incorporated into a SQL query
+  <li>The closest matches are rendered on this page ordered by their <b onclick="window.open('https://en.wikipedia.org/wiki/Cosine_similarity')">cosine similarity</b> to the your image
 </ol>
 <br>
 Some additional details on the demo deployment:
 <ul>
   <li>The index consists of approximately 50000 images from Flickr
   <li>The app is written in Python + Flask
-  <li>The database is a <a href="https://cockroachlabs.cloud/signup"><b>CockroachDB</b> <i>Basic</i> instance</a>
+  <li>The database is a <b onclick="window.open('https://cockroachlabs.cloud/signup')">CockroachDB <i>Basic</i></b> instance
 </ul>
 <br>
 
