@@ -32,6 +32,17 @@
     .ui-draggable, .ui-droppable {
 	    background-position: top;
     }
+    input[type="file"] {
+      display: none;
+    }
+    .custom-file-upload {
+      background-color: #a725b0;
+      color: white;
+      display: inline-block;
+      padding: 0.5rem;
+      cursor: pointer;
+      border-radius: 0.3rem;
+    }
   </style>
   <link rel="stylesheet" href="/static/jquery-ui.css">
   <script src="/static/jquery-3.7.1.js"></script>
@@ -46,8 +57,10 @@
 <tr style="vertical-align: center;">
  <td align="left" colspan="2">
   <form method="POST" action="/" enctype="multipart/form-data">
-   <p><input type="file" name="file"></p>
-   <p><input type="submit" value="Run Search"></p>
+   <p>
+    <input id="file-upload" type="file" name="file" onchange="form.submit()">
+    <label for="file-upload" class="custom-file-upload">Choose an image file</label>
+   </p>
   </form>
  </td>
 {% if search_file %}
