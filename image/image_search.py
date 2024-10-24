@@ -301,6 +301,7 @@ def index_image(conn, uri):
     "uri": uri
     , "embedding": embed
   }
+  thumb = thumb.convert("RGB")
   img_io = io.BytesIO()
   thumb.save(img_io, "JPEG")
   img_io.seek(0)
