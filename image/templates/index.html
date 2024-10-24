@@ -43,6 +43,24 @@
       cursor: pointer;
       border-radius: 0.3rem;
     }
+    .rotate {
+      animation: rotation 2s infinite linear;
+    }
+    @keyframes rotation {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(359deg);
+      }
+    }
+    .p-centered {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+    }
   </style>
   <link rel="stylesheet" href="/static/jquery-ui.css">
   <script src="/static/jquery-3.7.1.js"></script>
@@ -57,9 +75,10 @@
 <tr style="vertical-align: center;">
  <td align="left" colspan="2">
   <form method="POST" action="/" enctype="multipart/form-data">
-   <p>
-    <input id="file-upload" type="file" name="file" onchange="form.submit()">
+   <p class="p-centered">
+    <input id="file-upload" type="file" name="file" onchange="$('#loading_img').show(); form.submit()">
     <label for="file-upload" class="custom-file-upload">Choose an Image File</label>
+    <img src="/static/CRL_logo_square.png" width="48" class="rotate" id="loading_img" style="Display: None"/>
    </p>
   </form>
  </td>
