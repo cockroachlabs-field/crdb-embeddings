@@ -3,7 +3,7 @@ psycopg2-pool
 transformers
 torch
 Flask==2.1.0
-Werkzeug==2.2.2
+Werkzeug==3.0.6
 waitress
 base36
 SQLAlchemy==2.0.25
