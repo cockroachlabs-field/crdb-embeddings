@@ -1,7 +1,7 @@
 psycopg2-binary
 psycopg2-pool
 Flask==2.1.0
-Werkzeug==2.2.2
+Werkzeug==3.0.3
 waitress
 SQLAlchemy==2.0.25
 sqlalchemy-cockroachdb==2.0.1
