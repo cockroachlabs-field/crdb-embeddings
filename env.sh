@@ -23,5 +23,5 @@ export MAX_CHUNKS=96
 export SKIP_KMEANS=false
 
 # For client
-export MAX_RESULTS=5
+export MAX_RESULTS=4
 
