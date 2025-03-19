@@ -537,6 +537,8 @@ def search(conn, terms, limit):
   if rs is not None:
     for row in rs:
       (uri, sim, chunk) = row
+      if len(chunk) > 96:
+        chunk = chunk[0:96] + " ..."
       rv.append({"uri": uri, "score": float(sim), "chunk": chunk})
   et = time.time() - t0
   logging.info("SQL query time: {} ms".format(et * 1000))
@@ -552,7 +554,7 @@ def do_search(q_base_64, limit):
   q = decode(q_base_64)
   q = clean_text(q)
   with engine.connect() as conn:
-    conn.execute(text("SET TRANSACTION AS OF SYSTEM TIME '-10s';"))
+    #conn.execute(text("SET TRANSACTION AS OF SYSTEM TIME '-10s';"))
     rv = retry(search, (conn, q.split(), limit))
   return Response(json.dumps(rv), status=200, mimetype="application/json")
 
